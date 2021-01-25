@@ -8,24 +8,19 @@ class Team extends React.Component {
     if (Array.isArray(this.props.team.logos)) {
       img = <img src={this.props.team.logos[0]} alt="" style={{
         'objectFit': 'contain',
-        'height': '80%',
-        'width': '100%',
-
+        'height': '90%',
+        'width': '90%',
       }} />
     }
     return <div style={{
-      backgroundColor: this.props.team.color,
+      backgroundColor: this.props.team.alt_color,
       height: '200px',
       'textAlign': 'center',
       'alignContent': 'center',
       'width': '100%'
     }}>
       <span>{this.props.team.school} - {this.props.team.mascot}</span>
-      <span style={{
-        'verticalAlign': 'middle',
-        'marginBottom': '0.75em',
-        'objectFit': 'contain'
-      }}>{img} {this.props.score} </span>
+      {img}
     </div>
   };
 }
@@ -34,9 +29,15 @@ class Game extends React.Component {
   render() {
     return <div style={{
       'display': 'flex',
-      'width': '100%'
+      'width': '100%',
     }}>
-      <Team team={this.props.home_team} score='13' /> <Team team={this.props.away_team} score='9' />
+      <Team team={this.props.home_team} score='asdf' />
+      <div style={{
+        width: '20%',
+        textAlign: 'center',
+        margin: 'auto'
+      }}>{this.props.game.home_points} - {this.props.game.away_points} </div>
+      <Team team={this.props.away_team} score='asdf' />
     </div>
   }
 }
@@ -63,8 +64,7 @@ class App extends React.Component {
         .then(res => res.json())
         .then(result => this.setState({ games: result }))
     } else {
-      console.log(this.index('id', games))
-      this.setState({ teams: teams, games: games })
+      this.setState({ teams: this.index('id', teams), games: games })
     }
   }
 
@@ -73,8 +73,8 @@ class App extends React.Component {
   }
 
   render() {
-    const listItems = this.state.teams.map((team) =>
-      <Game home_team={team} away_team={team} />
+    const listItems = this.state.games.map((game) =>
+      <Game home_team={this.state.teams[game.home_id]} away_team={this.state.teams[game.away_id]} game={game} />
     );
     return <ul style={{
       'listStyle': null,
